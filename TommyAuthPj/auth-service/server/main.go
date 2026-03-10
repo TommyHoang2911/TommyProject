@@ -1,16 +1,27 @@
 package main
 
 import (
-	"auth-service/internal/handler"
+	"log"
 
-	"github.com/gin-gonic/gin"
+	"auth-service/config"
+	"auth-service/internal/handler"
+	"auth-service/internal/repository"
+	"auth-service/internal/service"
+	"auth-service/router"
 )
 
 func main() {
+	db, err := config.InitDB()
+	if err != nil {
+		log.Fatalf("database initialization failed: %v", err)
+	}
+	// defer db.Close()
 
-	r := gin.Default()
+	userRepo := repository.NewUserRepository(db)
+	authService := service.NewAuthService(userRepo)
+	authHandler := handler.NewAuthHandler(authService)
 
-	authHandler := handler.NewAuthHandler()
+	r := router.SetupRouter(authHandler)
 
 	r.POST("/register", authHandler.Register)
 

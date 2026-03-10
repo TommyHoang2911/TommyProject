@@ -9,7 +9,7 @@ import (
 )
 
 type AuthHandler struct {
-	authService *service.AuthService
+    authService *service.AuthService
 }
 
 type RegisterRequest struct {
@@ -17,10 +17,10 @@ type RegisterRequest struct {
 	Password string `json:"password"`
 }
 
-func NewAuthHandler() *AuthHandler {
-	return &AuthHandler{
-		authService: service.NewAuthService(),
-	}
+func NewAuthHandler(authService *service.AuthService) *AuthHandler {
+    return &AuthHandler{
+        authService: authService,
+    }
 }
 
 func (h *AuthHandler) Register(c *gin.Context) {
